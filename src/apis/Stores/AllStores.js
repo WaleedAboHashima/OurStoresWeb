@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-const api = "http://localhost:8080/founder/allstores";
-// const api = "http://192.168.1.2:8000/admin/users";
+const api = "https://ourstores.onrender.com/founder/allstores";
+// const api = "https://ourstores.onrender.com/admin/users";
 const cookies = new Cookies();
 const initialState = {
   data: [],

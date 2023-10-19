@@ -10,7 +10,7 @@ const initialState = {
     loading: false,
 }
 
-const api = "http://localhost:8080/founder/reports"
+const api = "https://ourstores.onrender.com/founder/reports"
 // const api = "http://192.168.1.2:8080/admin/reports"
 
 const cookies = new Cookies();

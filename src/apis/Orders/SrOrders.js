@@ -13,7 +13,7 @@ const initialState = {
 const cookies = new Cookies();
 
 // const api = "http://localhost:8000/main/SR/order/:SRId"
-const api = "http://192.168.1.2:8000/admin/SR/orders"
+const api = "https://ourstores.onrender.com/admin/SR/orders"
 
 export const fetchSrOrders = createAsyncThunk("SrOrdersData/fetchSrOrder", async () => {
     try {

@@ -4,8 +4,8 @@ import  Cookies  from 'universal-cookie';
 import axios from 'axios';
 
 
-const api = "http://localhost:8080/store/terms"
-// const api = "http://192.168.1.2:8000/store/terms"
+const api = "https://ourstores.onrender.com/store/terms"
+// const api = "https://ourstores.onrender.com/store/terms"
 const cookie = new Cookies();
 const initialState = {
     state: null,

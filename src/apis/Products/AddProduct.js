@@ -10,8 +10,8 @@ const initialState = {
   error: "",
 };
 
-const api = "http://localhost:8080/store/addproduct";
-// const api = "http://192.168.1.2:8000/admin/product";
+const api = "https://ourstores.onrender.com/store/addproduct";
+// const api = "https://ourstores.onrender.com/admin/product";
 
 export const fetchAddProduct = createAsyncThunk(
   "AddProductSlice/fetchAddProduct",

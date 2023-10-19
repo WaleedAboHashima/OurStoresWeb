@@ -4,8 +4,8 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-// const api = "http://192.168.1.2:8000/admin/orders";
-const api = "http://localhost:8080/main/orders";
+// const api = "https://ourstores.onrender.com/admin/orders";
+const api = "https://ourstores.onrender.com/main/orders";
 
 const initialState = {
   data: {},

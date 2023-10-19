@@ -13,7 +13,7 @@ const cookies = new Cookies();
 
 
 // const api = "http://localhost:8000/admin/product/:productId"
-const api = "http://192.168.1.2:8000/admin/product/"
+const api = "https://ourstores.onrender.com/admin/product/"
 
 
 export const fetchUpdateProduct = createAsyncThunk("UpdatedData/fetchUpdateProduct", async (arg) => {

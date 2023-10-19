@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const api = "http://localhost:8080/auth/store/login";
+const api = "https://ourstores.onrender.com/auth/store/login";
 // const api = "https://ourstores.onrender.com/auth/login";
 
 const initialState = {

@@ -3,7 +3,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
-const api = "http://localhost:8080/founder/user/"
+const api = "https://ourstores.onrender.com/founder/user/"
 const initialState = {
   data: {},
   loading: false,

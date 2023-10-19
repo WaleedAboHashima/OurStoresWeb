@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 // const api = "http://localhost:8000/admin/user"
-const api = "http://192.168.1.2:8000/admin/user"
+const api = "https://ourstores.onrender.com/admin/user"
 const cookie = new Cookies();
 const initialState = {
     state: null,

@@ -9,8 +9,8 @@ const initialState = {
     error: ""
 }
 
-const api = "http://localhost:8080/founder/report/"
-// const api = "http://192.168.1.2:8000/admin/report/"
+const api = "https://ourstores.onrender.com/founder/report/"
+// const api = "https://ourstores.onrender.com/admin/report/"
 
 const cookies = new Cookies();
 

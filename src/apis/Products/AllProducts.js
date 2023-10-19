@@ -11,7 +11,7 @@ const initialState = {
   error: null,
   state: "",
 };
-const api = "http://localhost:8080/store/getallproducts"
+const api = "https://ourstores.onrender.com/store/getallproducts"
 export const fetchAllProducts = createAsyncThunk(
   "ProductsData/fetchAllProducts",
   async () => {

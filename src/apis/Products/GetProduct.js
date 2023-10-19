@@ -11,7 +11,7 @@ const initialState = {
 }
 
 // const api = "http://localhost:8000/main/product/:productId";
-const api = "http://192.168.1.2:8000/main/product/";
+const api = "https://ourstores.onrender.com/main/product/";
 
 
 export const fetchGetProduct = createAsyncThunk("GetProductData/fetchGetProduct", async (arg) => {
