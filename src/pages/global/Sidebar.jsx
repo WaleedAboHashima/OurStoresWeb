@@ -13,6 +13,7 @@ import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import StoreIcon from "@mui/icons-material/Store";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
+import GavelIcon from '@mui/icons-material/Gavel';
 import {
   BarChartOutlined,
   MenuOutlined,
@@ -197,13 +198,15 @@ const Sidebar = () => {
                 /> */}
               </>
             ) : null}
-            <Item
-              title={context.language === "en" ? "Reports" : "شكاوي"}
-              to="/reports"
-              icon={<ReportOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {cookies.get("_auth_role") !== "83116111114101" && (
+              <Item
+                title={context.language === "en" ? "Reports" : "شكاوي"}
+                to="/reports"
+                icon={<ReportOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )}
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -251,7 +254,7 @@ const Sidebar = () => {
                 />
               </>
             ) : null}
-            {cookies.get("_auth_role") === "70111117110100101114" ? (
+            {/* {cookies.get("_auth_role") === "70111117110100101114" ? (
               <>
                 <Typography
                   variant="h6"
@@ -279,7 +282,54 @@ const Sidebar = () => {
                   setSelected={setSelected}
                 />
               </>
-            ) : null}
+            ) : null} */}
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={
+                context.language === "en"
+                  ? { m: "15px 0 5px 20px" }
+                  : { m: "15px 25px 5px 0", textAlign: "right" }
+              }
+            >
+              {context.language === "en" ? "Charts" : "رسم بياني"}
+            </Typography>
+            <Item
+              title={context.language === "en" ? "Pie Chart" : "رسم دائري"}
+              to="/pie"
+              icon={<PieChartOutlineOutlined />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title={context.language === "en" ? "Bar Chart" : "رسم بياني"}
+              to="/bar"
+              icon={<BarChartOutlined />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            {cookies.get("_auth_role") === "83116111114101" && (
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={
+                    context.language === "en"
+                      ? { m: "15px 0 5px 20px" }
+                      : { m: "15px 25px 5px 0", textAlign: "right" }
+                  }
+                >
+                  {context.language === "en" ? "Services" : "خدمات"}
+                </Typography>
+                <Item
+                  title={context.language === "en" ? "Terms and Conditions" : "الشروط و الأحكام"}
+                  to="/terms"
+                  icon={<GavelIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            )}
           </Box>
         </Menu>
       </ProSidebar>

@@ -9,6 +9,11 @@ import {
   Typography,
   Select,
   MenuItem,
+  Dialog,
+  useMediaQuery,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { ColorModeContext, tokens } from "./../../theme";
@@ -27,27 +32,35 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { AdminRegister } from "./../../apis/Auth/StoreOwner/Register";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 const SignUp = () => {
   // Variables.
   const context = useContext(LanguageContext);
   const theme = useTheme();
   const dispatch = useDispatch();
-  const navigator = useNavigate();
   const [email, setEmail] = useState();
   const [phone, setPhone] = useState();
   const [storeName, setStoreName] = useState();
   const [password, setPassword] = useState();
-  const [location, setLocation] = useState();
+  const [city, setCity] = useState();
   const [government, setGovernment] = useState();
   const [logoError, setLogoError] = useState("");
+  const [currentLocation, setCurrentLocation] = useState();
+  const [loading, setLoading] = useState(true);
+  const [selectedLocation, setSelectedLocation] = useState({
+    lat: 0,
+    lng: 0,
+  });
   const [error, setError] = useState();
   const [hidden, setHidden] = useState(false);
   const [logo, setLogo] = useState();
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const AdminData = useSelector((state) => state.AdminRegister);
   const state = useSelector((state) => state.AdminRegister);
-
   const governments = [
     {
       name: "Maskat",
@@ -169,9 +182,11 @@ const SignUp = () => {
     ? governments.find((gover) => gover.name === government && gover.states)
     : "";
   // Functions.
+
   const handleFileChange = (event) => {
     setLogo(event.target.files[0]);
   };
+
   const handleFormSubmit = () => {
     const formdata = new FormData();
     formdata.append("email", email);
@@ -179,13 +194,17 @@ const SignUp = () => {
     formdata.append("phone", phone);
     formdata.append("storeName", storeName);
     formdata.append("government", government);
-    formdata.append("location", location);
+    formdata.append("location[lat]", selectedLocation.lat);
+    formdata.append("location[lng]", selectedLocation.lng);
+    formdata.append("city", city);
     formdata.append("logo", logo);
     dispatch(AdminRegister(formdata));
   };
+
   const handleLanguageChange = (newLanguage) => {
     context.setLanguage(newLanguage);
   };
+
   const handleRegister = useCallback(() => {
     if (AdminData.status) {
       switch (AdminData.status) {
@@ -201,9 +220,7 @@ const SignUp = () => {
           break;
         case 403:
           setLogoError(
-            context.language === "en"
-              ? "Logo Required"
-              : "لوجو المتجر مطلوب"
+            context.language === "en" ? "Logo Required" : "لوجو المتجر مطلوب"
           );
           break;
         case 409: {
@@ -220,9 +237,32 @@ const SignUp = () => {
       }
     }
   }, [AdminData.status, context.language]);
+
+  const handleMapClick = (event) => {
+    const { latLng } = event;
+    const lat = latLng.lat();
+    const lng = latLng.lng();
+    setSelectedLocation({ lat, lng });
+  };
+
   useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ lat: latitude, lng: longitude });
+          setLoading(false);
+        },
+        (error) => {
+          console.log("Error getting current location:", error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
     handleRegister();
   }, [AdminData.status, handleRegister]);
+
   return (
     <Box
       display="flex"
@@ -377,6 +417,7 @@ const SignUp = () => {
               <Box color={"red"}>{logoError}</Box>
             </Box>
           )}
+
           {/* Container */}
           <Formik
             onSubmit={handleFormSubmit}
@@ -539,13 +580,13 @@ const SignUp = () => {
                     onBlur={handleBlur}
                     onChange={(e) => {
                       handleChange(e);
-                      setLocation(e.target.value);
+                      setCity(e.target.value);
                     }}
-                    name="location"
-                    value={values.location}
+                    name="city"
+                    value={values.city}
                     required
-                    error={!!touched.location && !!errors.location}
-                    helperText={touched.location && errors.location}
+                    error={!!touched.city && !!errors.city}
+                    helperText={touched.city && errors.city}
                     sx={
                       context.language === "en"
                         ? { textAlign: "left" }
@@ -572,6 +613,20 @@ const SignUp = () => {
                         ))
                       : ""}
                   </Select>
+
+                  <Button
+                    type="button"
+                    sx={{
+                      width: "70%",
+                      backgroundColor: "red",
+                      padding: "10px",
+                      color: "white",
+                    }}
+                    variant="filled"
+                    onClick={() => setOpen(true)}
+                  >
+                    {context.language === "en" ? "Location" : "الموقع"}
+                  </Button>
                   <Button
                     type="submit"
                     sx={{
@@ -581,7 +636,6 @@ const SignUp = () => {
                       color: "white",
                     }}
                     variant="filled"
-                    // onClick={() => setOpen(true)}
                   >
                     {context.language === "en" ? "Sign Up" : "انشاء حساب"}
                   </Button>
@@ -601,7 +655,7 @@ const SignUp = () => {
                       ? "Are you the Founder?"
                       : " هل انت المسؤول ؟ "}
                     <Link
-                      onClick={() => navigator("/founder")}
+                      onClick={() => navigate("/founder")}
                       underline="hover"
                       sx={{ cursor: "pointer", color: colors.primary[500] }}
                     >
@@ -615,7 +669,7 @@ const SignUp = () => {
                       ? "Already have an account?"
                       : "لديك حساب بالفعل؟"}
                     <Link
-                      onClick={() => navigator("/")}
+                      onClick={() => navigate("/")}
                       underline="hover"
                       sx={{ cursor: "pointer", color: colors.primary[500] }}
                     >
@@ -629,6 +683,43 @@ const SignUp = () => {
               </motion.form>
             )}
           </Formik>
+          <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+            <DialogTitle sx={{width: '100%', textAlign: 'right'}}>
+              <IconButton onClick={() => setOpen(false)}>
+                <CloseOutlinedIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ width: "100%" }}>
+              <LoadScript googleMapsApiKey="AIzaSyBwEhSP-_BoKEr72cwKFGJc7sZZSlkU7fQ">
+                {loading ? (
+                  <CircularProgress />
+                ) : (
+                  <GoogleMap
+                    onClick={handleMapClick}
+                    mapContainerStyle={{
+                      height: "100%",
+                      width: "100%",
+                      borderRadius: 20,
+                    }}
+                    zoom={15}
+                    center={currentLocation}
+                  >
+                    <Marker
+                      position={{
+                        lat: selectedLocation.lat,
+                        lng: selectedLocation.lng,
+                      }}
+                    />
+                  </GoogleMap>
+                )}
+              </LoadScript>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpen(false)} variant="contained" fullWidth disabled={selectedLocation.lat && selectedLocation.lng ? false : true}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
       </Box>
     </Box>
@@ -640,7 +731,7 @@ const initialValues = {
   phone: "",
   storeName: "",
   password: "",
-  location: "City",
+  city: "City",
   government: "Government",
 };
 
@@ -659,7 +750,7 @@ const Uschema = yup.object().shape({
     ),
   storeName: yup.string().required("Store Name Required"),
   password: yup.string().required("Password is Required.").min(5),
-  location: yup.string().required("City is Required."),
+  city: yup.string().required("City is Required."),
   government: yup.string().required("Government is Required."),
 });
 

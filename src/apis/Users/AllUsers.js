@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-const api = "http://localhost:8080/founder/allusers";
 // const api = "http://192.168.1.2:8000/admin/users";
 const cookies = new Cookies();
+const api = cookies.get('_auth_role') !== "83116111114101" ? "http://localhost:8080/founder/allusers" : "http://localhost:8080/store/users";
 const initialState = {
   data: [],
   loading: false,

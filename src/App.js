@@ -33,6 +33,7 @@ import { LanguageContext } from "./language";
 import Founder from './pages/Auth/Founder';
 import SignUp from "./pages/Auth/Signup";
 import Stores from "./pages/Data/stores";
+import Terms from "./pages/Data/rules/Terms";
 function App() {
   const cookies = new Cookies();
   const [theme, colorMode] = useMode();
@@ -73,6 +74,7 @@ function App() {
                   <Route path="/srarchive" element={<ArchivedSrOrders />} />
                   <Route path="/addproduct" element={<AddProduct />} />
                   <Route path="/settings" element={<Settings />}></Route>
+                  <Route path="/terms" element={<Terms />}></Route>
                   <Route path="/addusers" element={<AddUsers />} />
                   <Route
                     path="/products/:productId"

@@ -22,7 +22,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteUser } from "../../../apis/Users/DeleteUsers";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import { LanguageContext } from "../../../language";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+
 const Stores = () => {
   // Variables.
   const context = useContext(LanguageContext);
@@ -35,7 +39,9 @@ const Stores = () => {
   const colors = tokens(theme.palette.mode);
   const [data, setData] = useState();
   const state = useSelector((state) => state.GetAllStores);
-  
+  const [open, setOpen] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState({ lat: "", lng: "" });
+
   const columns = [
     { field: "id", headerName: "ID" },
     {
@@ -56,10 +62,22 @@ const Stores = () => {
       cellClassName: "name-column--cell",
     },
     {
-      field: "location",
+      field: "city",
       headerName: context.language === "en" ? "City" : "المدينه",
       flex: 1,
       cellClassName: "name-column--cell",
+    },
+    {
+      field: "location",
+      headerName: context.language === "en" ? "Location" : "الموقع",
+      flex: 1,
+      renderCell: ({ row: { location } }) => {
+        return (
+          <IconButton onClick={() => {setOpen(true); setCurrentLocation(location)}}>
+            <PlaceOutlinedIcon />
+          </IconButton>
+        );
+      },
     },
     {
       field: "phone",
@@ -185,6 +203,33 @@ const Stores = () => {
               Delete
             </Button>
           </DialogActions>
+        </Dialog>
+        <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+          <DialogTitle sx={{ width: "100%", textAlign: "right" }}>
+            <IconButton onClick={() => setOpen(false)}>
+              <CloseOutlinedIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent sx={{ width: "100%" }}>
+            <LoadScript googleMapsApiKey="AIzaSyBwEhSP-_BoKEr72cwKFGJc7sZZSlkU7fQ">
+              <GoogleMap
+                mapContainerStyle={{
+                  height: "100%",
+                  width: "100%",
+                  borderRadius: 20,
+                }}
+                zoom={15}
+                center={currentLocation}
+              >
+                <Marker
+                  position={{
+                    lat: currentLocation.lat,
+                    lng: currentLocation.lng,
+                  }}
+                />
+              </GoogleMap>
+            </LoadScript>
+          </DialogContent>
         </Dialog>
       </Box>
     </Box>

@@ -4,6 +4,7 @@ import { tokens } from "../../theme";
 import ReportIcon from "@mui/icons-material/Report";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import StateBox from "./../../components/StatBox";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import BarChart from "./../../components/BarChart";
 import PieChart from "./../../components/PieChart";
@@ -29,6 +30,7 @@ const Dashboard = () => {
   const [sr, setSr] = useState();
   const [stores, setStores] = useState();
   const [reports, setReports] = useState();
+  const [products, setProducts] = useState();
   const [transactions, setTransactions] = useState();
   const [top3, setTop3] = useState([]);
   const customersState = useSelector((state) => state.GetAllUsers);
@@ -88,7 +90,7 @@ const Dashboard = () => {
     dispatch(fetchallUsers()).then((res) => {
       if (res.payload.data) {
         setUsers(res.payload.data.length);
-        const allsr = res.payload.data.filter((user) => user.role === "User");
+        const allsr = res.payload.data.filter((user) => user.role === "SR");
         setSr(allsr.length);
       }
     });
@@ -97,6 +99,9 @@ const Dashboard = () => {
         setStores(res.payload.data);
       }
     });
+    dispatch(fetchAllProducts()).then((res) => {
+      setProducts(res.payload.data.products)
+    })
     dispatch(fetchGetReports()).then((res) => {
       if (res.payload.status === 200) {
         setReports(res.payload.data.reports.length);
@@ -197,7 +202,7 @@ const Dashboard = () => {
               sx={{ width: "100%", height: "100%" }}
               variant="rectangular"
             />
-          ) : (
+          ) : cookies.get("_auth_role") !== "83116111114101" ? (
             <StateBox
               title={stores ? stores.length : "0"}
               subtitle={
@@ -207,6 +212,20 @@ const Dashboard = () => {
               increase={stores ? `${(stores.length / 200) * 100}%` : ""}
               icon={
                 <StoreIcon
+                  sx={{ color: colors.primary[500], fontSize: "26px" }}
+                />
+              }
+            />
+          ) : (
+            <StateBox
+              title={products ? products.length : "0"}
+              subtitle={
+                context.language === "en" ? "All Products" : "جميع المنتجات"
+              }
+              progress={products ? products.length / 100 : "0"}
+              increase={products ? `${(products.length / 200) * 100}%` : "0%"}
+              icon={
+                <ShoppingCartOutlinedIcon
                   sx={{ color: colors.primary[500], fontSize: "26px" }}
                 />
               }

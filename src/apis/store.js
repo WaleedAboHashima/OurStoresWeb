@@ -29,6 +29,8 @@ import settingsReducer from "./Info/AdminSettings";
 // Report
 import getReportReducer from "./Report/GetReports";
 import deleteReportReducer from "./Report/DeleteReport";
+//Rules
+import addTermsReducer from "./Rules/TermsAndConditions"
 export default configureStore({
   reducer: {
     // Authorization
@@ -59,5 +61,7 @@ export default configureStore({
     // Report
     getReport: getReportReducer,
     deleteReport: deleteReportReducer,
+    //Rules
+    addTerms : addTermsReducer,
   },
 });
